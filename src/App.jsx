@@ -116,13 +116,14 @@ function CameraRig({ selected, selectedPosition, section }) {
 }
 
 function Scene({ selected, selectedPosition, onSelect, section }) {
+  const coarsePointer = typeof window !== 'undefined' && window.matchMedia('(pointer: coarse)').matches
   return (
-    <Canvas dpr={[1,1.6]} gl={{antialias:true,alpha:false,powerPreference:'high-performance'}} camera={{position:[0,1.2,13.5],fov:42,near:.1,far:100}}
+    <Canvas dpr={[1,1.6]} style={{touchAction:'pan-y'}} gl={{antialias:true,alpha:false,powerPreference:'high-performance'}} camera={{position:[0,1.2,13.5],fov:42,near:.1,far:100}}
       onCreated={({gl}) => { gl.setClearColor('#02040a'); gl.outputColorSpace=THREE.SRGBColorSpace; gl.toneMapping=THREE.ACESFilmicToneMapping; gl.toneMappingExposure=1.05 }}>
       <Suspense fallback={null}>
         <CameraRig selected={selected} selectedPosition={selectedPosition} section={section} />
         <SolarScene selected={selected} onSelect={onSelect} section={section} />
-        {!selected && <OrbitControls enablePan={false} enableDamping dampingFactor={.05} minDistance={7} maxDistance={18} rotateSpeed={.35} />}
+        {!selected && <OrbitControls enabled={!coarsePointer} enablePan={false} enableZoom={false} enableDamping dampingFactor={.05} minDistance={7} maxDistance={18} rotateSpeed={.35} />}
       </Suspense>
     </Canvas>
   )
